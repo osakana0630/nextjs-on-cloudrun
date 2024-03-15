@@ -11,7 +11,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Next.jsのアプリケーションをCloudRun上にデプロイ
+          Next.jsのアプリケーションをCloudRun上にデプロイ(update)
         </h1>
 
       </main>
