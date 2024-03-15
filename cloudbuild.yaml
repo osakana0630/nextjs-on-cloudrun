@@ -5,7 +5,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
+      - '${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest'
       - '.'
 
   # STEP2: コンテナイメージをGAR(GoogleArtifactRegistry)にプッシュする
@@ -13,7 +13,7 @@ steps:
     id: 'push-docker-image-to-gcr'
     args:
       - 'push'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
+      - '${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest'
 
   # STEP3: Cloud Runにデプロイする
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -23,7 +23,7 @@ steps:
       - 'deploy'
       - '$TRIGGER_NAME'
       - '--image'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
+      - '${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest'
       - '--platform'
       - 'managed'
       - '--region'
