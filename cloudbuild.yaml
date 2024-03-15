@@ -1,27 +1,29 @@
-# CloudBuildでdocker buildし、Artifact Registryへプッシュする
-
 steps:
-  # docker build
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build', '--no-cache', '-t',
-      '${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest',
-      '-f', 'Dockerfile',
-      '.',
-    ]
+    id: 'build-docker-image-from-dockerfile'
+    args:
+      - 'build'
+      - '-t'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
+      - '.'
 
-  # Docker push to Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push',  '${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest']
+    id: 'push-docker-image-to-gcr'
+    args:
+      - 'push'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
 
-  # Deploy to Cloud Run
-  - name: google/cloud-sdk
-    args: ['gcloud', 'run', 'deploy', '${_SERVICE_NAME}',
-           '--image=${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest',
-           '--region', '${_DEPLOY_REGION}', '--platform', 'managed',
-           '--allow-unauthenticated',
-           '--port=3000']
-
-# Store images in Google Artifact Registry
-images:
-  - ${_AR_HOSTNAME}/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:latest
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-cloud-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - '$TRIGGER_NAME'
+      - '--image'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'asia-northeast1'
+      - '--allow-unauthenticated'
+timeout: 9000s
