@@ -4,14 +4,14 @@ steps:
     args:
       - 'build'
       - '-t'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME$_SERVICE_NAME:latest'
+      - 'gcr.io/$PROJECT_ID/$TRIGGER_NAME:$SHORT_SHA'
       - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'push-docker-image-to-gcr'
     args:
       - 'push'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME$_SERVICE_NAME:latest'
+      - 'gcr.io/$PROJECT_ID/$TRIGGER_NAME:$SHORT_SHA'
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'deploy-cloud-run'
@@ -20,7 +20,7 @@ steps:
       - 'deploy'
       - '$TRIGGER_NAME'
       - '--image'
-      - '$_AR_HOSTNAME/$PROJECT_ID/$_REPO_NAME$_SERVICE_NAME:latest'
+      - 'gcr.io/$PROJECT_ID/$TRIGGER_NAME:$SHORT_SHA'
       - '--platform'
       - 'managed'
       - '--region'
