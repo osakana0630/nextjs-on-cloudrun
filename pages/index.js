@@ -11,8 +11,9 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          CI/CDのテスト3
+          CI/CDのテスト4
         </h1>
+        <p>自動更新</p>
 
       </main>
 
